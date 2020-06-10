@@ -29,7 +29,6 @@ def tone(f, t, sr=sample_rate):
     return signal
 
 def generate_sequence(notes, octaves, times):
-    print(len(notes), len(octaves), len(times))
     assert len(notes) == len(octaves) == len(times)
     return np.concatenate(
         [tone(note_freqs[note][octave], time)
