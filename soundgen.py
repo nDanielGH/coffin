@@ -2,6 +2,7 @@ import os
 import numpy as np
 from scipy import signal
 from scipy.io import wavfile
+from math import exp
 
 
 sample_rate = 44100
@@ -25,7 +26,7 @@ note_freqs = {
 
 def tone(f, t, sr=sample_rate):
     samples = np.linspace(0, t, int(t * sr), endpoint=False)
-    signal = np.int8((2**7 - 1) * np.sin(2 * np.pi * f * samples))
+    signal = np.int8((2**7 - 1) * np.sin(2 * np.pi * f * samples) * (1 - exp(-t * 0.5)))
     return signal
 
 def generate_sequence(notes, octaves, times):
@@ -108,13 +109,13 @@ def coffin():
         4, 4, 4, 4,
     ]
 
-    notes = notes_prologue + 3 * notes_chorus + notes_epilogue
-    octaves = octaves_prologue + 3 * octaves_chorus + octaves_epilogue
-    times = times_prologue + 3 * times_chorus + times_epilogue
+    notes = notes_prologue + 2 * notes_chorus + notes_epilogue
+    octaves = octaves_prologue + 2 * octaves_chorus + octaves_epilogue
+    times = times_prologue + 2 * times_chorus + times_epilogue
 
     times = [t / 18 for t in times]  # speed up
 
-    return notes, octaves, times
+    return 2 * notes, 2 * octaves, 2 * times
 
 
 wavfile.write('coffin.wav', sample_rate, generate_sequence(*coffin()))
